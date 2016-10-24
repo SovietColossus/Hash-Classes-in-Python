@@ -1,0 +1,64 @@
+from random import *
+
+class HashTable :
+	def hash (self, val) : raise TodoE
+	def insert (self, val) : raise TodoE
+	def delete (self, val) : raise TodoE
+	def search (self, val) : raise TodoE
+	def getVals (self) : raise TodoE
+
+class Hash_Function :
+	def __init__ (self,n,m) :
+		self.n = n
+		self.m = m
+		self.a = choice(range(1,n))
+		self.b = choice(range(n))
+		self.HashList = []
+		for x in range(m) :
+			self.HashList.append([])
+
+	def hash (self, k) :
+		return ((self.a * k + self.b) % self.n) % self.m
+
+class Chaining :
+
+	def __init__ (self, n, m) :
+		self.hots = Hash_Function(n,m)
+	
+	def hash (self, val) :
+		self.hots.hash(val)
+
+	def insert (self, val) :
+		self.hots.HashList[self.hots.hash(val)].append(val)
+
+	def delete (self, val) :
+		if self.search(val) == True: # If a value isn't there, it doesn't do anything, correct? At least, that's what it's like for linear probing.
+			self.hots.HashList[self.hots.hash(val)].remove(val)
+
+	def search (self, val) :
+		return val in self.hots.HashList[self.hots.hash(val)]
+
+	def getVals(self) :
+		return self.hots.HashList
+
+	#Or, if you want to make it look like Sabry's stuff on the homework, just do this:
+	# def getVals(self) :
+	# 	hots2 = []
+	# 	for list in self.hots.HashList :
+	# 		for vals in list :
+	# 			hots2.append(vals)
+	# 	return hots2
+
+htf = Chaining(17,6)
+print htf.hash(5)
+print htf.getVals()
+htf.insert(8)
+print htf.getVals()
+print htf.search(8)
+print htf.search(9)
+htf.delete(9)
+htf.insert(1)
+htf.insert(5)
+htf.insert(10)
+htf.delete(5)
+print htf.getVals()

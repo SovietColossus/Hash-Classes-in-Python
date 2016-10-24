@@ -1,0 +1,114 @@
+from random import *
+
+class HashTable :
+	def hash (self, val) : raise TodoE
+	def insert (self, val) : raise TodoE
+	def delete (self, val) : raise TodoE
+	def search (self, val) : raise TodoE
+	def getVals (self) : raise TodoE
+
+class Hash_Function :
+	def __init__ (self,n,m) :
+		self.n = n
+		self.m = m
+		self.a = choice(range(1,n))
+		self.b = choice(range(n))
+		self.HashList = []
+		for x in range(m) :
+			self.HashList.append([]) #Do the same as Chaining, but we'll treat this list of lists as a single list with objects that happen to be []
+
+	def hash (self, k) :
+		return ((self.a * k + self.b) % self.n) % self.m #Hash
+
+class LinearProbing :
+
+	def __init__ (self, n, m) :
+		self.hots = Hash_Function(n,m) #Invokes the hash function __init__. I could've literally put both files into one class but eh.
+
+	def hash (self, val) :
+		self.hots.hash(val) # Invokes hash from hash function
+
+	def insert (self, val) :
+
+		if self.hots.HashList[self.hots.hash(val)] == [] or self.hots.HashList[self.hots.hash(val)] == Deleted('Deleted') : # check for [] or Deleted at that index
+			self.hots.HashList[self.hots.hash(val)] = val #In that case, we can replace it.
+		else : 
+			counter = 0 #Counter for separate looping
+			if counter == 0 and self.hots.HashList[self.hots.hash(val)] != self.hots.HashList[len(self.hots.HashList) - 1] : #checks that it's not the last value in the list and that counter = 0
+				for Indiana in range(self.hots.hash(val) + 1, len(self.hots.HashList)) : #Loop
+					if self.hots.HashList[Indiana] == [] or self.hots.HashList[Indiana] == Deleted('Deleted') : #If empty or del, value, break
+						self.hots.HashList[Indiana] = val
+						break
+					if Indiana == len(self.hots.HashList) : #If last index, and we didn't break yet, set counter to something non zero, and go to next loop
+						counter = 2
+						break
+			elif counter != 0 or self.hots.HashList[self.hots.hash(val)] == self.hots.HashList[len(self.hots.HashList) - 1]:  #Same concept but for the other half of the set
+				for Indiana in range(0, self.hots.hash(val)) :
+					if self.hots.HashList[Indiana] == [] or self.hots.HashList[Indiana] == Deleted('Deleted') :
+						self.hots.HashList[Indiana] = val
+						counter = 0 #Set counter back to zero... just in case
+						break
+
+	def delete (self, val) :
+		if val in self.hots.HashList : #Searches val in self.hots.HashList
+			self.hots.HashList[self.hots.HashList.index(val)] = Deleted('Deleted') #Sets it to Deleted
+
+	def search (self, val) :
+		# I don't think  there is a need for the case of Deleted('Deleted') since it compares it to val in the first place through the length of the list
+		for x in range(0, len(self.hots.HashList)) :
+			if self.hots.HashList[x] == val :
+				return True
+		return False
+
+	# def getVals(self) :
+	# 	return self.hots.HashList
+
+	# Or, if you want to make it look like Sabry's stuff on the homework, just do this:
+	def getVals(self) :
+		hots2 = []
+		for vals in self.hots.HashList :
+			hots2.append(vals)
+			if vals == [] :
+				hots2.pop()
+		return hots2
+
+class Deleted :
+	
+	def __init__ (self, head):
+		self.head = head
+
+	def search (self, val) :
+		return self.head == v or self.tail.search(v)
+
+	def isEmpty (self) :
+		return False
+
+	def toString (self) :
+		return "%s" % (self.head)
+
+# htf = LinearProbing(17,6)
+# print htf.hots.hash(8)
+# print htf.hots.hash(1)
+# print htf.hots.hash(5)
+# print htf.hots.hash(10)
+# print htf.getVals()
+# # []
+# htf.insert(8)
+# print htf.getVals()
+# # [8]
+# htf.delete(9) # Shouldn't do anything
+# print htf.getVals()
+# # [8]
+# print htf.search(8)
+# # True
+# print htf.search(9)
+# # False
+# htf.insert(1)
+# print htf.getVals()
+# htf.insert(5)
+# print htf.getVals()
+# htf.insert(10)
+# print htf.getVals()
+# htf.delete(5)
+# print htf.getVals()
+# # [1, <__main__.Deleted instance at 0x7fcadbf47200>, 10, 8]
